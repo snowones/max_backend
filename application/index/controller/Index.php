@@ -250,6 +250,32 @@ class Index
 
         return $res;
     }
+
+     /**
+     * zyx
+     * 2020/4/27
+     * 插入文章评论
+     */
+    public function insertArticleComment(){
+        $article_id = isset($_REQUEST['article_id']) ? $_REQUEST['article_id'] : ''; // 必传参数
+        $user_openid = isset($_REQUEST['user_openid']) ? $_REQUEST['user_openid'] : ''; // 必传参数
+        $content = isset($_REQUEST['content']) ? $_REQUEST['content'] : ''; // 必传参数
+        $create_time = date('Y-m-d H:i:s');//数据创建日期
+
+        if(empty($user_openid)){
+            $result['code'] = '400';
+            $result['msg'] = 'openid为空';
+            return json($result);
+        }
+      
+        $sql = "insert `article_comment`(`article_id`,`user_openid`,`content`,`create_time`) values('". $article_id."','".$user_openid."','".$content."','".$create_time."')";
+        $res = Db::execute($sql);
+
+        return $res;
+    }
+
+
+    
   
 
 
