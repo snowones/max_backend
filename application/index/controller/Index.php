@@ -2,6 +2,18 @@
 namespace app\index\controller;
 header("Access-Control-Allow-Origin:*");
 
+
+//引入osssdk
+if (is_file(__DIR__ . '/../../../sdk/ali-oss/autoload.php')) {
+    require_once __DIR__ . '/../../../sdk/ali-oss/autoload.php';
+}
+if (is_file(__DIR__ . '/../../vendor/autoload.php')) {
+    require_once __DIR__ . '/../../vendor/autoload.php';
+}
+
+use OSS\OssClient;
+use OSS\Core\OssException;
+
 use think\Controller;
 use think\Db;
 class Index
@@ -98,12 +110,109 @@ class Index
         }
         
         
-        
     }
 
+        /**
+         * zyx
+         * 2020/4/25
+         * 把图片转存入oss 然后返回oss链接
+         */
+        public function savaImgToOss(){
+            //设置oss地址
+            $accessKeyId = "LTAI4FqzoH3pBVs25Fb5Yoni";
+            $accessKeySecret = "RwbcI10xMlpbjuo1jEvOhAEANmoS6i";
+            // Endpoint以杭州为例，其它Region请按实际情况填写。
+            $endpoint = "http://oss-cn-hangzhou.aliyuncs.com";
+            // 存储空间名称
+            $bucket= '1978246522-max';
+            // 文件名称
+            $object = "test1";
+            $content = "Hi, OSS.";
+
+            if(empty($_FILES["file"])){
+                $result['code'] = 500;
+                $result['msg'] = "请选择要上传的图片";
+                return '图片为空';
+            }
+            if($_FILES["file"]["error"]){
+                $result['code'] = 500;
+                $result['msg'] = $_FILES["file"]["error"];
+                return '错误';
+            }
+            else{
+                //没有出错
+                //加限制条件
+                //判断上传文件类型为png或jpg且大小不超过1024000B
+                if(($_FILES["file"]["type"]=="image/png"||$_FILES["file"]["type"]=="image/jpeg"||$_FILES["file"]["type"]=="image/jpg")&&$_FILES["file"]["size"]<4024000){
+                    // //防止文件名重复 这些方法都是在处理字符串
+                    // $md5 = md5(time().$_FILES["file"]["name"]);
+                    // $info2=explode(".",$_FILES["file"]["name"]);
+                    // $suffix = strtolower(end($info2));
+                    $name = time().$_FILES["file"]["name"];
+                   
+
+
+                    //定义临时上传文件目录 
+                    //APP_PATH 系统自带
+                    $filedir = APP_PATH.'uploadfiletemp/';
+                    $fileName = strtolower($filedir.$name);
+                    //转码，把utf-8转成gb2312,返回转换后的字符串， 或者在失败时返回 FALSE。
+                    $fileName =iconv("UTF-8","gb2312",$fileName);
+                    //检查文件或目录是否存在
+                    if(file_exists($fileName)){
+                        $result['code'] = 500;
+                        $result['msg'] = "该文件已存在";
+                    }
+                    else {
+                        //保存文件,   move_uploaded_file 将上传的文件移动到新位置
+                        $a = move_uploaded_file($_FILES["file"]["tmp_name"],$fileName);//将临时地址移动到指定地址
+
+                        // bin
+                        $app_img_file = $fileName; // 图片路径
+                        $fp = fopen($app_img_file, "r");
+                        $filesize = $_FILES["file"]["size"];
+                        $content = fread($fp, $filesize);
+                        //返回图片的base64
+                        $file_content = chunk_split(base64_encode($content));
+                        $result['base64'] = $file_content;
+
+
+                        //上传到oss文件后的文件名称
+                        if($_FILES["file"]["type"]=="image/png") {
+                            $fileName1 = time().'.png';
+                        }
+                        if($_FILES["file"]["type"]=="image/jpeg") {
+                            $fileName1 = time().'.jpeg';
+                        }
+                        if($_FILES["file"]["type"]=="image/jpg") {
+                            $fileName1 = time().'.jpg';
+                        }
+                    
+                        try {
+                            $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
+                            $aa = $ossClient->uploadFile($bucket, $fileName1, $fileName);
+                            $result['msg'] = $aa['info']['url'];
+                            // $this->setJsonResponse($aa);
+                        } catch (OssException $e) {
+                            return  json($e->getMessage());
+                        }
+
+                        return  json($result);
+
+                            
+                    }
+                }
+                else{
+                    $result['code'] = 500;
+                    $result['msg'] = "文件类型不对11";
+                    $result['imgtype'] = $_FILES["file"]["type"];
+                    return  json($result);
+
+                }
+            }
 
    
-
+    }
   
 
 
