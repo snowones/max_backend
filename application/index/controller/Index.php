@@ -322,6 +322,31 @@ class Index
      /**
      * zyx
      * 2020/4/27
+     * 插入帖子评论
+     */
+    public function insertDiscussComment(){
+        $discuss_id = isset($_REQUEST['discuss_id']) ? $_REQUEST['discuss_id'] : ''; // 必传参数
+        $user_openid = isset($_REQUEST['user_openid']) ? $_REQUEST['user_openid'] : ''; // 必传参数
+        $content = isset($_REQUEST['content']) ? $_REQUEST['content'] : ''; // 必传参数
+        $create_time = date('Y-m-d H:i:s');//数据创建日期
+
+        if(empty($user_openid)){
+            $result['code'] = '400';
+            $result['msg'] = 'openid为空';
+            return json($result);
+        }
+      
+        $sql = "insert `discuss_comment`(`discuss_id`,`user_openid`,`content`,`create_time`) values('". $discuss_id."','".$user_openid."','".$content."','".$create_time."')";
+        $res = Db::execute($sql);
+
+        return $res;
+    }
+
+
+    
+     /**
+     * zyx
+     * 2020/4/27
      * 插入帖子数据 创建帖子
      */
     public function saveDiscussInfo(){
