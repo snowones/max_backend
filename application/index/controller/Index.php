@@ -106,6 +106,27 @@ class Index
     }
 
 
+     /**
+     * zyx
+     * 2020/4/29
+     * 获取全部的相册信息
+     **/
+    public function selectAllPicture(){ 
+        $res =  Db::query('SELECT a.*,b.`avatar_url` FROM `picture` a LEFT JOIN `user` b ON (a.`user_openid` = b.`openid`)  ORDER BY `id` DESC');
+        return json($res);
+    }
+
+    /**
+     * zyx
+     * 2020/4/29
+     * 获取相册信息通过id
+     **/
+    public function selectPictureById(){ 
+        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : ''; // 必传参数
+        $res =  Db::query("SELECT a.*,b.`name`,b.`avatar_url` FROM `picture` a LEFT JOIN `user` b ON (a.`user_openid` = b.`openid`) where a.`id` = '". $id."'");
+        return json($res);
+    }
+
     
     /**
      * zyx
