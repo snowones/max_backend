@@ -127,6 +127,27 @@ class Index
         return json($res);
     }
 
+
+    /**
+     * zyx
+     * 2020/5/5
+     * 获取商品信息
+     **/
+    public function selectAllGoods(){ 
+        $res =  Db::query('SELECT a.*,b.`avatar_url` FROM `goods` a LEFT JOIN `user` b ON (a.`user_openid` = b.`openid`)  ORDER BY `id` DESC');
+        return json($res);
+    }
+
+    /**
+     * zyx
+     * 2020/5/5
+     * 获取商品信息通过id
+     **/
+    public function selectGoodsById(){ 
+        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : ''; // 必传参数
+        $res =  Db::query("SELECT a.*,b.`name`,b.`avatar_url` FROM `goods` a LEFT JOIN `user` b ON (a.`user_openid` = b.`openid`) where a.`id` = '". $id."'");
+        return json($res);
+    }
     
     /**
      * zyx
@@ -407,6 +428,35 @@ class Index
         }
       
         $sql = "insert `picture`(`user_openid`,`name`,`contents`,`create_time`) values('". $user_openid."','".$name."','".$contents."','".$create_time."')";
+        $res = Db::execute($sql);
+
+        return $res;
+    }
+
+    
+     /**
+     * zyx
+     * 2020/5/5
+     * 插入商品数据
+     */
+    public function saveGoodsInfo(){
+        $name = isset($_REQUEST['name']) ? $_REQUEST['name'] : ''; // 必传参数
+        $image = isset($_REQUEST['image']) ? $_REQUEST['image'] : ''; // 必传参数
+        $user_openid = isset($_REQUEST['user_openid']) ? $_REQUEST['user_openid'] : ''; // 必传参数
+        $detail = isset($_REQUEST['detail']) ? $_REQUEST['detail'] : ''; // 必传参数
+        $remarks = isset($_REQUEST['remarks']) ? $_REQUEST['remarks'] : ''; // 必传参数
+        $price = isset($_REQUEST['price']) ? $_REQUEST['price'] : ''; // 必传参数
+        $discount = isset($_REQUEST['discount']) ? $_REQUEST['discount'] : ''; // 必传参数
+        $contact = isset($_REQUEST['contact']) ? $_REQUEST['contact'] : ''; // 必传参数
+        $create_time = date('Y-m-d H:i:s');//数据创建日期
+
+        if(empty($user_openid)){
+            $result['code'] = '400';
+            $result['msg'] = 'openid为空';
+            return json($result);
+        }
+      
+        $sql = "insert `goods`(`name`,`image`,`user_openid`,`detail`,`remarks`,`price`,`discount`,`contact`,`create_time`) values('". $name."','".$image."','".$user_openid."','".$detail."','".$remarks."','".$price."','".$discount."','".$contact."','".$create_time."')";
         $res = Db::execute($sql);
 
         return $res;
