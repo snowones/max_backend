@@ -496,6 +496,17 @@ class Index
         $res =  Db::query("SELECT a.*,b.`avatar_url` FROM `picture` a LEFT JOIN `user` b ON (a.`user_openid` = b.`openid`) WHERE a.`user_openid` = '".$openid."' ORDER BY `id` DESC");
         return json($res);
     }
+
+     /**
+     * zyx
+     * 2020/5/5
+     * 获取商品信息通过openid
+     **/
+    public function selectUserGoods(){ 
+        $openid = isset($_REQUEST['openid']) ? $_REQUEST['openid'] : ''; // 必传参数
+        $res =  Db::query("SELECT a.*,b.`avatar_url` FROM `goods` a LEFT JOIN `user` b ON (a.`user_openid` = b.`openid`) WHERE a.`user_openid` = '".$openid."' ORDER BY `id` DESC");
+        return json($res);
+    }
     
   
 
