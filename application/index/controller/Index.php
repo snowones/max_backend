@@ -474,6 +474,17 @@ class Index
         return json($res);
     }
 
+
+     /**
+     * zyx
+     * 2020/5/6
+     * 获取全部的文章信息通过openid
+     **/
+    public function selectUserArticle(){ 
+        $openid = isset($_REQUEST['openid']) ? $_REQUEST['openid'] : ''; // 必传参数
+        $res =  Db::query("SELECT a.*,b.`name`,b.`avatar_url` FROM `article` a LEFT JOIN `user` b ON (a.`user_openid` = b.`openid`)  WHERE a.`user_openid` = '".$openid."' ORDER BY `id` DESC");
+        return json($res);
+    }
     
   
 
