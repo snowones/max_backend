@@ -148,6 +148,16 @@ class Index
         $res =  Db::query("SELECT a.*,b.`name`,b.`avatar_url` FROM `goods` a LEFT JOIN `user` b ON (a.`user_openid` = b.`openid`) where a.`id` = '". $id."'");
         return json($res);
     }
+
+     /**
+     * zyx
+     * 2020/5/7
+     * 获取全部用户信息
+     **/
+    public function selectAllUsers(){ 
+        $res =  Db::query('SELECT * FROM `user`');
+        return json($res);
+    }
     
     /**
      * zyx
