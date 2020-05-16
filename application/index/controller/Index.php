@@ -517,6 +517,51 @@ class Index
         $res =  Db::query("SELECT a.*,b.`avatar_url` FROM `goods` a LEFT JOIN `user` b ON (a.`user_openid` = b.`openid`) WHERE a.`user_openid` = '".$openid."' ORDER BY `id` DESC");
         return json($res);
     }
+
+
+    /**
+     * zyx
+     * 2020/5/16
+     * 商品删除
+     **/
+    public function deleteGoodById(){ 
+        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : ''; // 必传参数
+        $res =  Db::query("DELETE FROM `goods` WHERE `id` = '". $id."'");
+        return json($res);
+    }
+
+    /**
+     * zyx
+     * 2020/5/16
+     * 商品帖子删除
+     **/
+    public function deleteDiscussById(){ 
+        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : ''; // 必传参数
+        $res =  Db::query("DELETE FROM `discuss` WHERE `id` = '". $id."'");
+        return json($res);
+    }
+
+    /**
+     * zyx
+     * 2020/5/16
+     * 文章删除
+     **/
+    public function deleteArticleById(){ 
+        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : ''; // 必传参数
+        $res =  Db::query("DELETE FROM `article` WHERE `id` = '". $id."'");
+        return json($res);
+    }
+
+    /**
+     * zyx
+     * 2020/5/16
+     * 相册删除
+     **/
+    public function deletePictureById(){ 
+        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : ''; // 必传参数
+        $res =  Db::query("DELETE FROM `picture` WHERE `id` = '". $id."'");
+        return json($res);
+    }
     
   
 
