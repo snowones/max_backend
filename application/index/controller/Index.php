@@ -593,6 +593,126 @@ class Index
         
     }
 
+     /**
+     * zyx
+     * 2020/5/19
+     * 创建用户pp
+     */
+    public function newsLogin(){
+        $account = isset($_REQUEST['account']) ? $_REQUEST['account'] : ''; // 必传参数
+        $password = isset($_REQUEST['password']) ? $_REQUEST['password'] : ''; // 必传参数
+
+        $sqlSelect = "select * from `news_user` where `account` = '". $account."'";
+        $resSelect =  Db::query($sqlSelect);
+        //去查找数据有这个账号没   有了不用插入数据没有就插入这条数据
+        if(empty($resSelect)){
+            $result['code'] = '401';
+            $result['msg'] = '该账户不存在';
+            return json($result);
+        }else{
+            //判断密码是否正确
+            $right = $resSelect[0]["password"];
+            if($password ==  $right){
+                $result['code'] = '200';
+                $result['msg'] = $resSelect;
+                return json($result);
+            }else{
+                $result['code'] = '402';
+                $result['msg'] = '密码错误';
+                return json($result);
+            }
+        }
+        
+    }
+
+    
+     /**
+     * zyx
+     * 2020/5/19
+     * 创建文章或是提欸子
+     */
+    public function newsInsertConent(){
+        $user_id = isset($_REQUEST['user_id']) ? $_REQUEST['user_id'] : ''; // 必传参数
+        $title = isset($_REQUEST['title']) ? $_REQUEST['title'] : ''; // 必传参数
+        $subtitle = isset($_REQUEST['subtitle']) ? $_REQUEST['subtitle'] : ''; // 必传参数
+        $content = isset($_REQUEST['content']) ? $_REQUEST['content'] : ''; // 必传参数
+        $img = isset($_REQUEST['img']) ? $_REQUEST['img'] : ''; // 必传参数
+        $wenzhangType = isset($_REQUEST['wenzhangType']) ? $_REQUEST['wenzhangType'] : ''; // 必传参数
+        $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : ''; // 必传参数
+        $create_time = date('Y-m-d H:i:s');
+
+        $sql = "insert `news_content`(`user_id`,`title`,`subtitle`,`content`,`img`,`wenzhangType`,`type`,`create_time`) values('". $user_id."','". $title."','".$subtitle."','".$content."','".$img."','".$wenzhangType."','".$type."','".$create_time."')";
+        $res = Db::execute($sql);
+        $result['code'] = '200';
+        $result['msg'] = '成功';
+        return json($result);
+        
+    }
+
+
+      /**
+     * zyx
+     * 2020/5/19
+     *  查找数据 根据type
+     */
+    public function newsSelectContentByType(){
+        $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : ''; // 必传参数
+        $wenzhangType = isset($_REQUEST['wenzhangType']) ? $_REQUEST['wenzhangType'] : ''; // 必传参数
+        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : ''; // 必传参数
+
+        if($wenzhangType){
+            $sqlSelect = "SELECT a.*,b.`name`,b.`avatar` FROM `news_content` a LEFT JOIN `news_user` b ON (a.`user_id` = b.`id`)  where a.`type` = '". $type."' AND `a.wenzhangType` ='". $wenzhangType."'";
+            $resSelect =  Db::query($sqlSelect);
+        }else if($id){
+            $sqlSelect = "SELECT a.*,b.`name`,b.`avatar` FROM `news_content` a LEFT JOIN `news_user` b ON (a.`user_id` = b.`id`)  where a.`id` = '". $id."'";
+            $resSelect =  Db::query($sqlSelect);
+        }else{
+            $sqlSelect = "SELECT a.*,b.`name`,b.`avatar` FROM `news_content` a LEFT JOIN `news_user` b ON (a.`user_id` = b.`id`)  where a.`type` = '". $type."'";
+            $resSelect =  Db::query($sqlSelect);
+        }
+
+       
+        return json($resSelect);
+    }
+    
+
+    
+
+
+    /**
+     * zyx
+     * 2020/5/19
+     * 插入用户评论
+     */
+    public function newsInsertComment(){
+        $user_id = isset($_REQUEST['user_id']) ? $_REQUEST['user_id'] : ''; // 必传参数
+        $pid = isset($_REQUEST['pid']) ? $_REQUEST['pid'] : ''; // 必传参数
+        $content = isset($_REQUEST['content']) ? $_REQUEST['content'] : ''; // 必传参数
+        $create_time = date('Y-m-d H:i:s');
+
+        $sql = "insert `news_comment`(`user_id`,`pid`,`content`,`create_time`) values('". $user_id."','". $pid."','".$content."','".$create_time."')";
+        $res = Db::execute($sql);
+        $result['code'] = '200';
+        $result['msg'] = '成功';
+        return json($result);
+        
+    }
+
+
+    
+      /**
+     * zyx
+     * 2020/5/19
+     *  查找数据 根据type
+     */
+    public function newsSelectAllComment(){
+        $pid = isset($_REQUEST['pid']) ? $_REQUEST['pid'] : ''; // 必传参数
+     
+        $sqlSelect = "SELECT a.*,b.`name`,b.`avatar` FROM `news_comment` a LEFT JOIN `news_user` b ON (a.`user_id` = b.`id`)  where a.`pid` = '". $pid."'";
+        $resSelect =  Db::query($sqlSelect);
+       
+        return json($resSelect);
+    }
 
 }          
 
