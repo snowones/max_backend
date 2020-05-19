@@ -562,8 +562,36 @@ class Index
         $res =  Db::query("DELETE FROM `picture` WHERE `id` = '". $id."'");
         return json($res);
     }
-    
   
+    /**
+     * zyx
+     * 2020/5/19
+     * 创建用户pp
+     */
+    public function newsCreateUser(){
+        $name = isset($_REQUEST['name']) ? $_REQUEST['name'] : ''; // 必传参数
+        $account = isset($_REQUEST['account']) ? $_REQUEST['account'] : ''; // 必传参数
+        $password = isset($_REQUEST['password']) ? $_REQUEST['password'] : ''; // 必传参数
+        $avatar = isset($_REQUEST['avatar']) ? $_REQUEST['avatar'] : ''; // 必传参数
+        $create_time = date('Y-m-d H:i:s');
+
+
+        $sqlSelect = "select * from `news_user` where `account` = '". $account."'";
+        $resSelect =  Db::query($sqlSelect);
+        //去查找数据有这个账号没   有了不用插入数据没有就插入这条数据
+        if(!empty($resSelect)){
+            $result['code'] = '400';
+            $result['msg'] = '该用户已存在无需创建';
+            return json($result);
+        }else{
+            $sql = "insert `news_user`(`name`,`account`,`password`,`avatar`,`create_time`) values('". $name."','". $account."','".$password."','".$avatar."','".$create_time."')";
+            $res = Db::execute($sql);
+            $result['code'] = '200';
+            $result['msg'] = '成功';
+            return json($result);
+        }
+        
+    }
 
 
 }          
