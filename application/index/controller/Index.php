@@ -596,7 +596,7 @@ class Index
      /**
      * zyx
      * 2020/5/19
-     * 创建用户pp
+     * 用户登录pp
      */
     public function newsLogin(){
         $account = isset($_REQUEST['account']) ? $_REQUEST['account'] : ''; // 必传参数
@@ -623,6 +623,18 @@ class Index
             }
         }
         
+    }
+
+     /**
+     * zyx
+     * 2020/5/23
+     * 查找全部用户的数据
+     */
+    public function newsSelectAllUserInfo(){
+        $sqlSelect = "select * from `news_user`";
+        $resSelect =  Db::query($sqlSelect);
+       
+        return json($resSelect);
     }
 
     
@@ -712,6 +724,17 @@ class Index
         $resSelect =  Db::query($sqlSelect);
        
         return json($resSelect);
+    }
+
+    /**
+     * zyx
+     * 2020/5/16
+     * 删除文章或是帖子
+     **/
+    public function newsDeleteContent(){ 
+        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : ''; // 必传参数
+        $res =  Db::query("DELETE FROM `news_content` WHERE `id` = '". $id."'");
+        return json($res);
     }
 
 }          
