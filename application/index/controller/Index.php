@@ -661,7 +661,7 @@ class Index
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : ''; // 必传参数
 
         if($wenzhangType){
-            $sqlSelect = "SELECT a.*,b.`name`,b.`avatar` FROM `news_content` a LEFT JOIN `news_user` b ON (a.`user_id` = b.`id`)  where a.`type` = '". $type."' AND `a.wenzhangType` ='". $wenzhangType."'";
+            $sqlSelect = "SELECT a.*,b.`name`,b.`avatar` FROM `news_content` a LEFT JOIN `news_user` b ON (a.`user_id` = b.`id`)  where a.`type` = '". $type."' AND a.`wenzhangType` ='". $wenzhangType."'";
             $resSelect =  Db::query($sqlSelect);
         }else if($id){
             $sqlSelect = "SELECT a.*,b.`name`,b.`avatar` FROM `news_content` a LEFT JOIN `news_user` b ON (a.`user_id` = b.`id`)  where a.`id` = '". $id."'";
@@ -703,7 +703,7 @@ class Index
       /**
      * zyx
      * 2020/5/19
-     *  查找数据 根据type
+     *  查找评论数据 根据type
      */
     public function newsSelectAllComment(){
         $pid = isset($_REQUEST['pid']) ? $_REQUEST['pid'] : ''; // 必传参数
