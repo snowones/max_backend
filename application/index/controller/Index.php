@@ -225,8 +225,6 @@ class Index
      */
     public function savaImgToOss(){
         //设置oss地址
-        $accessKeyId = "LTAI4FqzoH3pBVs25Fb5Yoni";
-        $accessKeySecret = "RwbcI10xMlpbjuo1jEvOhAEANmoS6i";
         // Endpoint以杭州为例，其它Region请按实际情况填写。
         $endpoint = "http://oss-cn-hangzhou.aliyuncs.com";
         // 存储空间名称
