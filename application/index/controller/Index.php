@@ -225,6 +225,8 @@ class Index
      */
     public function savaImgToOss(){
         //设置oss地址
+        $accessKeyId = "LTAI4FqzoH3pBVs25Fb5Yoni";
+        $accessKeySecret = "RwbcI10xMlpbjuo1jEvOhAEANmoS6i";
         // Endpoint以杭州为例，其它Region请按实际情况填写。
         $endpoint = "http://oss-cn-hangzhou.aliyuncs.com";
         // 存储空间名称
@@ -584,8 +586,10 @@ class Index
         }else{
             $sql = "insert `news_user`(`name`,`account`,`password`,`avatar`,`create_time`) values('". $name."','". $account."','".$password."','".$avatar."','".$create_time."')";
             $res = Db::execute($sql);
+            $sqlResult =  Db::query($sqlSelect);
             $result['code'] = '200';
             $result['msg'] = '成功';
+            $result['data'] = $sqlResult;
             return json($result);
         }
         
